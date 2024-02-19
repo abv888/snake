@@ -4,6 +4,8 @@ from food import Food
 from scoreboard import Scoreboard
 import time
 
+SNAKE_SPEED = 0.1
+
 screen = Screen()
 screen.setup(width=1200, height=1200)
 screen.bgcolor("black")
@@ -23,22 +25,25 @@ game_is_on = True
 
 while game_is_on:
     screen.update()
-    time.sleep(0.1)
+    time.sleep(SNAKE_SPEED)
     snake.move()
 
     if snake.head.distance(food) < 20:
         food.refresh()
         snake.extend()
         scoreboard.increase_score()
+        SNAKE_SPEED *= 0.9
 
     if snake.head.xcor() > 580 or snake.head.xcor() < -580 or snake.head.ycor() > 580 or snake.head.ycor() < -580:
-        scoreboard.reset()
-        snake.reset()
+        scoreboard.reset_scoreboard()
+        snake.reset_snake()
+        SNAKE_SPEED = 0.1
 
     for segment in snake.segments[1:]:
         if snake.head.distance(segment) < 10:
-            scoreboard.reset()
-            snake.reset()
+            scoreboard.reset_scoreboard()
+            snake.reset_snake()
+            SNAKE_SPEED = 0.1
 
 
 screen.exitonclick()
